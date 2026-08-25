@@ -165,7 +165,7 @@ function Home() {
             <h4>Contact Us</h4>
             <p>Email: <a href="mailto:hello@algoarena.com">hello@algoarena.com</a></p>
             <p>Support: <Link to="/discussion">Community Discord</Link></p>
-            <p>Location: San Francisco, CA</p>
+            <p>Location: India</p>
           </div>
           <div>
             <h4>Follow Us</h4>

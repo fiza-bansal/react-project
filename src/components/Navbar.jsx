@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 
-function Navbar() {
+function Navbar({ isDarkMode, onToggleTheme }) {
   // NavLink adds the active class so the current page is easy to spot.
   const getLinkClass = ({ isActive }) => (isActive ? "active" : "");
 
@@ -16,6 +16,16 @@ function Navbar() {
         <NavLink to="/discussion" className={getLinkClass}>Discuss</NavLink>
         <NavLink to="/skill-track" className={getLinkClass}>Skill Track</NavLink>
       </nav>
+
+      <button
+        type="button"
+        className="theme-toggle"
+        aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+        title={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+        onClick={onToggleTheme}
+      >
+        {isDarkMode ? "☀️" : "🌙"}
+      </button>
     </header>
   );
 }

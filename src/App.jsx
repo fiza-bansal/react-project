@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -7,9 +8,14 @@ import SkillTrack from "./pages/SkillTrack";
 import "./App.css";
 
 function App() {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
   return (
-    <>
-      <Navbar />
+    <div className={`app-shell ${isDarkMode ? "dark-mode" : "light-mode"}`}>
+      <Navbar
+        isDarkMode={isDarkMode}
+        onToggleTheme={() => setIsDarkMode((currentMode) => !currentMode)}
+      />
 
       {/* Each route connects a URL path to one page component. */}
       <Routes>
@@ -18,7 +24,7 @@ function App() {
         <Route path="/discussion" element={<Discussion />} />
         <Route path="/skill-track" element={<SkillTrack />} />
       </Routes>
-    </>
+    </div>
   );
 }
 
