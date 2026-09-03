@@ -109,7 +109,7 @@ function Problems() {
                   onClick={() => setTopic(topic === item ? "All" : item)}
                 >
                   <span>{item}</span>
-                  <small>{problems.filter((problem) => problem.topic === item).length || 98}</small>
+                  <small>{problems.filter((problem) => problem.topic === item).length}</small>
                 </button>
               ))}
             </div>
