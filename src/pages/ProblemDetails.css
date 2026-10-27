@@ -1,0 +1,193 @@
+
+.problem-details-page {
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+.problem-title-link {
+  color: var(--text);
+}
+
+.problem-title-link:hover {
+  color: var(--accent);
+}
+
+.details-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font: 0.7rem 'Space Mono', monospace;
+}
+
+.back-link {
+  color: var(--accent);
+}
+
+.problem-navigation {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.problem-navigation button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Problem description + compiler */
+.details-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.8fr);
+  gap: 1rem;
+  padding: 1.25rem;
+  align-items: stretch;
+  min-height: calc(100vh - 100px);
+}
+
+.details-panel {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--glow);
+}
+
+.description-panel {
+  padding: 1rem;
+}
+
+/* Problem text */
+.details-panel h1 {
+  margin: 0.5rem 0 1rem;
+  font: 800 1.5rem 'Syne', sans-serif;
+}
+
+.details-panel h2 {
+  margin: 0;
+  font: 700 1rem 'Syne', sans-serif;
+}
+
+.details-panel h3 {
+  margin: 1.3rem 0 0.6rem;
+  font: 700 0.85rem 'Syne', sans-serif;
+}
+
+.problem-description,
+.sample-case p,
+.muted-text {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+.details-panel pre {
+  overflow-x: auto;
+  padding: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text);
+  font: 0.75rem/1.7 'Space Mono', monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.sample-case {
+  margin-top: 0.6rem;
+  padding: 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+
+.sample-case p {
+  margin: 0.4rem 0 0;
+  overflow-wrap: anywhere;
+}
+
+/* Compiler panel */
+.editor-panel {
+  min-width: 0;
+  min-height: 75vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+/* Let the OnlineCompiler widget use the available width */
+.editor-panel .compiler,
+.editor-panel .runcode {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.editor-panel .runcode {
+  flex: 1;
+}
+
+/* Output displayed by Compiler.jsx */
+.compiler-output {
+  width: 100%;
+  min-height: 80px;
+  overflow-x: auto;
+  padding: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text);
+  font: 0.75rem/1.7 'Space Mono', monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .details-layout {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+  }
+
+  .description-panel {
+    grid-column: auto;
+  }
+
+  .editor-panel {
+    min-height: 600px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+  .details-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .description-panel,
+  .editor-panel {
+    padding: 0.75rem;
+  }
+
+  .editor-panel {
+    min-height: 500px;
+  }
+
+  .details-topbar {
+    padding: 0.8rem;
+  }
+
+  .problem-navigation {
+    width: 100%;
+  }
+
+  .problem-navigation button {
+    flex: 1;
+  }
+}

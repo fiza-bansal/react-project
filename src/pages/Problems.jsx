@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const problems = [
   { id: 1, title: "Two Sum", difficulty: "Easy", topic: "Array", tags: ["array", "hashmap"] },
@@ -82,7 +83,9 @@ function Problems() {
               <article className="problem-row" key={problem.id}>
                 <span className="row-number">{problem.id}</span>
                 <div className="row-title-wrap">
-                  <strong>{problem.title}</strong>
+                  <Link to={`/problems/${problem.id}`} className="problem-title-link">
+  <strong>{problem.title}</strong>
+</Link>
                   <div className="row-tags">
                     {problem.tags.map((tag) => (
                       <span className="tag" key={tag}>{tag}</span>

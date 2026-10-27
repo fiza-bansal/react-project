@@ -1,23 +1,5 @@
-import { useState } from "react";
+import { getCurrentUser } from "../auth";
 import { Link } from "react-router-dom";
-
-const progressStats = [
-  { label: "Problems Solved", value: "127" },
-  { label: "Current Streak", value: "7 Days" },
-  { label: "Total XP", value: "2450" },
-  { label: "Accuracy", value: "78%" },
-];
-
-const skills = [
-  { name: "Arrays", percent: 85 },
-  { name: "Strings", percent: 72 },
-  { name: "Linked Lists", percent: 60 },
-  { name: "Trees", percent: 45 },
-  { name: "Dynamic Programming", percent: 30 },
-];
-
-const strongAreas = ["Arrays", "Strings"];
-const weakAreas = ["Trees", "Dynamic Programming"];
 
 function ProgressCard({ label, value }) {
   return (
@@ -35,6 +17,7 @@ function SkillProgress({ name, percent }) {
         <span>{name}</span>
         <strong>{percent}%</strong>
       </div>
+
       <div className="skill-bar">
         <span style={{ width: `${percent}%` }} />
       </div>
@@ -43,6 +26,77 @@ function SkillProgress({ name, percent }) {
 }
 
 function SkillTrack() {
+  const user = getCurrentUser();
+
+  // If no user is logged in, show a login message.
+  if (!user) {
+    return (
+      <main className="page skilltrack-page">
+        <div className="content-container skilltrack-shell">
+          <h1>Please Login First</h1>
+          <p>Login to view your personal SkillTrack dashboard.</p>
+
+          <Link className="button primary-button" to="/login">
+            Go to Login
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  const progress = user.progress || {
+    currentStreak: 0,
+    totalXP: 0,
+    accuracy: 0,
+    skills: {
+      Arrays: 0,
+      Strings: 0,
+      "Linked Lists": 0,
+      Trees: 0,
+      "Dynamic Programming": 0,
+    },
+  };
+
+  const progressStats = [
+    {
+      label: "Problem Solved",
+      value: `${progress.problemsSolved || 0}`,
+    },
+    {
+      label: "Current Streak",
+      value: `${progress.currentStreak || 0} Days`,
+    },
+    {
+      label: "Total XP",
+      value: progress.totalXP || 0,
+    },
+    {
+      label: "Accuracy",
+      value: `${progress.accuracy || 0}%`,
+    },
+  ];
+
+  const weeklyCompleted = Math.min(progress.problemsSolved,10);
+
+  const skills = Object.entries(progress.skills || {}).map(
+    ([name, percent]) => ({ name, percent })
+  );
+
+  const strongAreas = skills
+    .filter((skill) => skill.percent >= 60)
+    .map((skill) => skill.name);
+
+  const weakAreas = skills
+    .filter((skill) => skill.percent < 40)
+    .map((skill) => skill.name);
+
+  const totalXP = progress.totalXP || 0;
+
+  const levelProgress = Math.min(
+    (totalXP / 3000) * 100,
+    100
+  );
+
   return (
     <main className="page skilltrack-page">
       <div className="content-container skilltrack-shell">
@@ -50,16 +104,23 @@ function SkillTrack() {
           <div>
             <p className="section-label">// Learning Dashboard</p>
             <h1 className="page-title">SkillTrack</h1>
-            <p className="section-sub">Track your coding journey and improve your skills.</p>
+            <p className="section-sub">
+              Track your coding journey and improve your skills.
+            </p>
           </div>
+
           <div className="greeting-box">
-            <span>Hello Coder 👋</span>
+            <span>Hello {user.name} 👋</span>
           </div>
         </header>
 
         <section className="stats-grid">
           {progressStats.map((item) => (
-            <ProgressCard key={item.label} label={item.label} value={item.value} />
+            <ProgressCard
+              key={item.label}
+              label={item.label}
+              value={item.value}
+            />
           ))}
         </section>
 
@@ -67,9 +128,14 @@ function SkillTrack() {
           <section className="main-column">
             <div className="panel-card">
               <h2>My Skills</h2>
+
               <div className="skill-list">
                 {skills.map((skill) => (
-                  <SkillProgress key={skill.name} name={skill.name} percent={skill.percent} />
+                  <SkillProgress
+                    key={skill.name}
+                    name={skill.name}
+                    percent={skill.percent}
+                  />
                 ))}
               </div>
             </div>
@@ -77,35 +143,55 @@ function SkillTrack() {
             <div className="two-column-grid">
               <div className="panel-card mini-panel">
                 <h2>💪 Strong Areas</h2>
+
                 <ul className="area-list">
-                  {strongAreas.map((area) => (
-                    <li key={area}>{area}</li>
-                  ))}
+                  {strongAreas.length > 0 ? (
+                    strongAreas.map((area) => (
+                      <li key={area}>{area}</li>
+                    ))
+                  ) : (
+                    <li>Keep practicing to build your strengths!</li>
+                  )}
                 </ul>
               </div>
 
               <div className="panel-card mini-panel">
                 <h2>🎯 Needs Improvement</h2>
+
                 <ul className="area-list">
-                  {weakAreas.map((area) => (
-                    <li key={area}>{area}</li>
-                  ))}
+                  {weakAreas.length > 0 ? (
+                    weakAreas.map((area) => (
+                      <li key={area}>{area}</li>
+                    ))
+                  ) : (
+                    <li>Great work! Keep improving your skills.</li>
+                  )}
                 </ul>
               </div>
             </div>
-
           </section>
 
           <aside className="side-column">
             <div className="panel-card">
               <h2>Weekly Goal</h2>
+
               <div className="goal-box">
                 <p>Solve 10 Problems</p>
-                <strong>6 / 10 Completed</strong>
+
+                <strong>{weeklyCompleted} / 10 Completed</strong>
+
                 <div className="progress-bar goal-bar">
-                  <span style={{ width: "60%" }} />
+                  <span
+                    style={{
+                      width: `${(weeklyCompleted / 10) * 100}%`,
+                    }}
+                  />
                 </div>
-                <Link className="button primary-button practice-button" to="/problems">
+
+                <Link
+                  className="button primary-button practice-button"
+                  to="/problems"
+                >
                   Continue Practice
                 </Link>
               </div>
@@ -113,13 +199,25 @@ function SkillTrack() {
 
             <div className="panel-card">
               <h2>Your Coding Level</h2>
+
               <div className="level-box">
-                <p className="level-name">Problem Solver</p>
-                <strong>2450 / 3000 XP</strong>
+                <p className="level-name">
+                  {progress.totalXP >= 3000
+                    ? "Algorithm Explorer"
+                    : "Problem Solver"}
+                </p>
+
+                <strong>{progress.totalXP} / 3000 XP</strong>
+
                 <div className="progress-bar level-bar">
-                  <span style={{ width: "82%" }} />
+                  <span style={{ width: `${levelProgress}%` }} />
                 </div>
-                <p className="level-note">550 XP more to reach Algorithm Explorer 🚀</p>
+
+                <p className="level-note">
+                  {progress.totalXP >= 3000
+                    ? "Congratulations! You reached Algorithm Explorer 🚀"
+                    : `${3000 - progress.totalXP} XP more to reach Algorithm Explorer 🚀`}
+                </p>
               </div>
             </div>
           </aside>

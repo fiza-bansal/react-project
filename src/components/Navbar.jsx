@@ -1,13 +1,23 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { getCurrentUser, logoutUser } from "../auth";
 
-function Navbar({ isDarkMode, onToggleTheme }) {
-  // NavLink adds the active class so the current page is easy to spot.
+function Navbar({ isDarkMode, onToggleTheme,onLogout,isLoggedIn }) {
   const getLinkClass = ({ isActive }) => (isActive ? "active" : "");
+  const user = isLoggedIn ? getCurrentUser() : null;
+  const navigate = useNavigate();
+
+  function handleLogout() {
+  logoutUser();
+  onLogout();
+  navigate("/login");
+}
 
   return (
     <header className="navbar">
       <Link className="nav-logo" to="/">
-        <span className="bracket">&#123;</span>Algo Arena<span className="bracket">&#125;</span>
+        <span className="bracket">&#123;</span>
+        Algo Arena
+        <span className="bracket">&#125;</span>
       </Link>
 
       <nav className="nav-links">
@@ -15,6 +25,18 @@ function Navbar({ isDarkMode, onToggleTheme }) {
         <NavLink to="/problems" className={getLinkClass}>Problems</NavLink>
         <NavLink to="/discussion" className={getLinkClass}>Discuss</NavLink>
         <NavLink to="/skill-track" className={getLinkClass}>Skill Track</NavLink>
+        <NavLink to="/battle" className={getLinkClass}>Battleground</NavLink>
+
+        {user ? (
+          <button type="button" onClick={handleLogout}>
+            Logout
+          </button>
+        ) : (
+          <>
+            <NavLink to="/login" className={getLinkClass}>Login</NavLink>
+            <NavLink to="/signup" className={getLinkClass}>Sign Up</NavLink>
+          </>
+        )}
       </nav>
 
       <button
